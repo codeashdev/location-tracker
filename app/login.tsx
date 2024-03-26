@@ -5,10 +5,13 @@ import Button from '@/components/Button';
 import {Picker} from '@react-native-picker/picker';
 import { userRoleData } from '@/storage/asyncstorage';
 import { router } from 'expo-router';
+import { useColorScheme } from 'react-native';
+import Colors from '@/constants/Colors';
 // import socket from '@/utils/socket';
 
 const LoginPage = () => {
   const [selectedRole, setSelectedRole] = useState<string>('user');
+  const colorScheme = useColorScheme();
   // const [socket, setSocket] = useState<Socket | null>(null); 
   // console.log(io)
 
@@ -61,8 +64,9 @@ const LoginPage = () => {
       <Text>Please select your role:</Text>
       <Picker
         selectedValue={selectedRole}
-        style={{ height: 50, width: 200 }}
+        style={{ height: 50, width: 200, marginBottom:10, color: Colors[colorScheme ?? 'dark'].text,  }}
         onValueChange={(itemValue) => setSelectedRole(itemValue)}
+        dropdownIconColor={Colors[colorScheme ?? 'dark'].text}
       >
         <Picker.Item label="User" value="user" />
         <Picker.Item label="Carrier" value="carrier" />

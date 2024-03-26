@@ -5,12 +5,30 @@ import { Text, View } from '@/components/Themed';
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
+import { router } from 'expo-router';
+import useLocationStatus from '@/components/useLocationStatus';
+import Toast from 'react-native-root-toast';
 
-export default function TabSettingsScreen() {
+export default function adminSettingsScreen() {
   const colorScheme = useColorScheme();
+  const locationOn = useLocationStatus();
   const gradientColors = colorScheme === 'dark' ? ['#1EB58A', 'black'] : ['#1EB58A', 'white'];
+
+const handleLastLocationPress = () => {
+  router.push('/lastLocation')
+}
+const handleCurrentLocationPress = () => {
+  if(locationOn) {
+    router.push('/UserLocation')
+  } else {
+    Toast.show("No Order yet")
+  }
+  
+}
+// console.log(locationOn)
   return (
     <>
       <LinearGradient
@@ -20,13 +38,25 @@ export default function TabSettingsScreen() {
         >
         <Text style={styles.title}> <AntDesign size={28} style={{ marginRight: 0 }} name="setting" color="white" />Settings</Text>
         <View style={[styles.card, { backgroundColor: Colors[colorScheme ?? 'dark'].background }]}>
-          <TouchableOpacity style={styles.itemsContainer}>
+          <TouchableOpacity style={styles.itemsContainer} onPress={handleLastLocationPress}>
             <View style={styles.item}>
-              <View style={styles.itemTextIcon}>
+              <View style={styles.itemTextIcon} >
               <View style={styles.iconContainer}>
               <FontAwesome size={18} style={{ marginRight: 0 }} name='map-marker' color="white" />
               </View>
-              <Text  style={[styles.itemsText, { color: Colors[colorScheme ?? 'dark'].text }]}>Last Known Location</Text>
+              <Text   style={[styles.itemsText, { color: Colors[colorScheme ?? 'dark'].text }]}>Last Known Location</Text>
+              </View>
+              <AntDesign size={15} style={{ marginLeft: 5, color: Colors[colorScheme ?? 'dark'].text }} name="right" color="black" />
+            </View>
+            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemsContainer} onPress={handleCurrentLocationPress}>
+            <View style={styles.item}>
+              <View style={styles.itemTextIcon} >
+              <View style={styles.iconContainer}>
+              <Feather name="map" size={18} color="white" />
+              </View>
+              <Text   style={[styles.itemsText, { color: Colors[colorScheme ?? 'dark'].text }]}>Current Location</Text>
               </View>
               <AntDesign size={15} style={{ marginLeft: 5, color: Colors[colorScheme ?? 'dark'].text }} name="right" color="black" />
             </View>

@@ -2,21 +2,23 @@ import React from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 import { Link, router } from 'expo-router';
-import { getsendLocationToUser } from '@/storage/asyncstorage';
+import { getCustomerOrdered } from '@/storage/asyncstorage';
 import { FontAwesome } from '@expo/vector-icons';
 import { View, Text } from '@/components/Themed';
+import useLocationStatus from '@/components/useLocationStatus';
 
 export default function TabUserScreen() {
-  const [loactionOn, setLocationOn] = React.useState<boolean>(false);
+ 
+  const [userOrdered, setUserOrdered] = React.useState<boolean>(false);
+  const locationOn = useLocationStatus();
 
   React.useEffect(() => {
-    
-    const fetchProductsSentToCarrier = async () => {
-      const sent = await getsendLocationToUser();
-      setLocationOn(sent);
+    const fetchUserOrdered = async () => {
+      const ordered = await getCustomerOrdered();
+      setUserOrdered(ordered);
     };
 
-    fetchProductsSentToCarrier();
+    fetchUserOrdered();
   }, []);
 
   const handleLocationPress = () => {
@@ -26,7 +28,8 @@ export default function TabUserScreen() {
     router.push('/selectProduct');
   }
 
-  // console.log(selectedProducts)
+  // console.log("userOrdered: " + userOrdered)
+  // console.log("loactionOn: " + loactionOn)
   return (
     <ScrollView contentContainerStyle={styles.container}>
      
@@ -34,12 +37,16 @@ export default function TabUserScreen() {
          <FontAwesome name="shopping-bag" size={28} color="white" />
          <Text style={styles.linkText}>Order</Text>
        </TouchableOpacity>
-      
-      {loactionOn ?
+
+       <Text style={styles.aprrovalText}>{userOrdered && locationOn  && 'Status: Order Approved'}{userOrdered && !locationOn  && 'Status: Waiting for approval'}</Text>
+      {locationOn ?
+      <>
+       
        <TouchableOpacity style={styles.orderContainer} onPress={handleLocationPress}>
          <FontAwesome name="map-marker" size={28} color="white" />
          <Text style={styles.linkText}>Show Location</Text>
        </TouchableOpacity>
+       </>
        :
        <TouchableOpacity style={styles.noOrderContainer} >
        <FontAwesome name="exclamation-circle" size={28} color="black" />
@@ -94,5 +101,8 @@ const styles = StyleSheet.create({
     paddingVertical: 50,
     borderRadius: 20,
     backgroundColor: '#1EB58A',
+  },
+  aprrovalText: {
+    fontSize: 15,
   }
 });

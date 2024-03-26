@@ -11,6 +11,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { clearAllAsyncStorage } from '@/storage/asyncstorage';
+import { PaperProvider } from 'react-native-paper';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -61,13 +62,17 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
     <RootSiblingParent>
     <SafeAreaProvider>
+    <PaperProvider>
       <Stack screenOptions={{animation: 'ios'}}>
         <Stack.Screen name="login" options={{ headerShown: true, headerTitle: '', headerRight: () =>  <FontAwesome onPress={clearAllAsyncStorage} name="trash" size={28} color="red" /> }} />
         <Stack.Screen name="(adminTabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(carrierTabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(userTabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="selectProduct" options={{ headerShown: true, headerTitle: '', }} />
+        <Stack.Screen name="lastLocation" options={{ headerShown: true, headerTitle: '', }} />
        {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
       </Stack>
+      </PaperProvider>
     </SafeAreaProvider>
     </RootSiblingParent> 
     </ThemeProvider>

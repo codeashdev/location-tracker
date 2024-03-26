@@ -12,11 +12,11 @@ TaskManager.defineTask<CustomLocationData>(LOCATION_TRACKING, async ({ data, err
     console.log('LOCATION_TRACKING task ERROR:', error);
     return;
   }
-  if (data) {
-    const { locations } = data;
-    // Process location data here
-    console.log('New location data:', locations);
-  }
+  // if (data) {
+  //   const { locations } = data;
+  //   // Process location data here
+  //   // console.log('New location data:', locations);
+  // }
 });
 
 function useLocation() {
@@ -24,8 +24,13 @@ function useLocation() {
   const DEFAULT_LONGITUDE_DELTA = 0.0421;
 
   const [userAddress, setUserAddress] = useState<LocationGeocodedAddress | null>(null);
+  const [lastAddress, setlastAddress] = useState<LocationGeocodedAddress | null>(null);
   const [locationStarted, setLocationStarted] = useState(false);
   const [locationData, setLocationData] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [lastLocation, setLastLocation] = useState({
     latitude: 0,
     longitude: 0,
   });
@@ -61,6 +66,23 @@ function useLocation() {
     }
   };
 
+  const getLastKnownLocation = async () => {
+    try {
+      const lastLocation = await Location.getLastKnownPositionAsync();
+      if (lastLocation) {
+        setLastLocation({
+          latitude: lastLocation.coords.latitude,
+          longitude: lastLocation.coords.longitude,
+        });
+        const address = await Location.reverseGeocodeAsync({ latitude: lastLocation.coords.latitude, longitude: lastLocation.coords.longitude });
+        setlastAddress(address[0]);
+      } else {
+        Toast.show('Last known location not available');
+      }
+    } catch (error) {
+      console.error('Error getting last known location:', error);
+    }
+  };
 
   const stopLocation = () => {
     setLocationStarted(false);
@@ -97,7 +119,7 @@ function useLocation() {
     }
   }, [locationData]);
 
-  return { userAddress, locationStarted, locationData, mapRegion, setMapRegion, stopLocation, startLocationTracking };
+  return { userAddress, locationStarted, locationData, mapRegion, setMapRegion, stopLocation, lastAddress, lastLocation, startLocationTracking, getLastKnownLocation };
 }
 
 export default useLocation;
