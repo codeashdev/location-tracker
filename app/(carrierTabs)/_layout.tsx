@@ -29,9 +29,9 @@ export default function TabLayout() {
       }, []);
 
       React.useEffect(() => {
-        if (userRole){
-          console.log(userRole)
-        }
+        // if (userRole){
+        //   console.log(userRole)
+        // }
           if (userRole && userRole !== 'carrier') {
             router.push('../login');
           }

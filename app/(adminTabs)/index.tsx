@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Button from '@/components/Button';
 import { ProductList } from '@/components/productList';
 
-export default function TabHomeScreen() {
+export default function TabAdmincreen() {
  
   const [isListVisible, setIsListVisible] = useState(false);
   const [customerOrdered, setCustomerOrdered] = useState<boolean>(false);
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   orderTitleContainer: {
     flexDirection: 'row',
-    width: '80%',
+    width: '65%',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: 20
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     // paddingVertical: 4
   },
   orderTitle: {
-    width: '55%',
+    width: '65%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'

@@ -34,6 +34,18 @@ export const userRoleData = async (value: string) => {
     }
   };
 
+  export const getStoredProducts = async () => {
+    try {
+      const value = await AsyncStorage.getItem('selected-products');
+      if (value !== null) {
+        // value previously stored
+        return value
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
   export const getCustomerOrdered = async () => {
     try {
       const value = await AsyncStorage.getItem('customer-ordered');
@@ -49,17 +61,7 @@ export const userRoleData = async (value: string) => {
   }
 
 
-  export const getStoredProducts = async () => {
-    try {
-      const value = await AsyncStorage.getItem('selected-products');
-      if (value !== null) {
-        // value previously stored
-        return value
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
+  
 
   export const sendProductsToCarrier = async () => {
     try {

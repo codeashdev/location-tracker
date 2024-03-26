@@ -6,11 +6,11 @@ import { Card, Button } from 'react-native-paper'; // Import Card and Button fro
 import { View, Text } from '@/components/Themed';
 import { storeProducts } from '@/storage/asyncstorage';
 import { productsData } from '@/utils/productData';
+import { router } from 'expo-router';
 
 
 export default function SelectProductScreen() {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
-
   // Function to handle product selection
   const handleProductSelection = (productName: string) => {
     setSelectedProducts(prevSelectedProducts => {
@@ -23,6 +23,11 @@ export default function SelectProductScreen() {
       }
     });
   };
+
+  const handleOrder = () => {
+    storeProducts(selectedProducts)
+    router.dismiss()
+  }
 
   return (
     <View style={styles.container}>
@@ -46,7 +51,7 @@ export default function SelectProductScreen() {
       </View>
       <View style={styles.orderBtnContainer}>
         <Button
-          onPress={() => storeProducts(selectedProducts)}
+          onPress={handleOrder}
           buttonColor="#1EB58A"
           textColor='white'
           mode="elevated"
