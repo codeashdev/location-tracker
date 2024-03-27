@@ -5,10 +5,21 @@ import { getsendProductsToCarrier, sendLocationToUser } from '@/storage/asyncsto
 import { ProductList } from '@/components/productList';
 import { AntDesign } from '@expo/vector-icons';
 import Button from '@/components/Button';
+import * as Location from 'expo-location';
+import useLocation from '@/components/useLocation';
+import socket from '@/utils/socket';
 
 export default function TabHomeScreen() {
   const [productsSent, setProductsSent] = useState<boolean>(false);
   const [isListVisible, setIsListVisible] = useState(false);
+  const { userAddress, locationStarted, locationData, mapRegion, setMapRegion, stopLocation, startLocationTracking } = useLocation();
+  let carrierAddress = userAddress?.formattedAddress;
+  let carrierLocationData = {
+    locationData,
+    mapRegion,
+    carrierAddress
+  }
+  const [role, setRole] = React.useState('');
   useEffect(() => {
     
     const fetchProductsSentToCarrier = async () => {
@@ -19,19 +30,38 @@ export default function TabHomeScreen() {
     fetchProductsSentToCarrier();
   }, []);
 
+  React.useEffect(() => {
+    // Listen for the 'set_role' event from the server
+    socket.on('set_role', (role) => {
+      setRole(role);
+      console.log(role)
+    });
+
+    // Cleanup function
+    return () => {
+      // Remove the event listener when the component unmounts
+      socket.off('set_role');
+    };
+  }, []); // Empty dependency array to ensure the effect runs only once
+console.log(role)
   const toggleListVisibility = () => {
     setIsListVisible(prev => !prev);
   };
 
   const handleTakeOrder = () => {
-    sendLocationToUser();
-  }
 
-    // console.log(productsSent)
+    sendLocationToUser();
+    startLocationTracking();
+
+   
+    socket.emit('send_data', carrierLocationData);
+    
+  }
+  // console.log(carrierLocationData)
+    
   return (
     <View style={styles.container}>
-    
-      {productsSent ?
+      
       <>
       <View style={styles.orderTitleContainer}>
       <TouchableOpacity style={styles.titleContainer} onPress={toggleListVisibility}>
@@ -42,17 +72,14 @@ export default function TabHomeScreen() {
       </TouchableOpacity>
       
   
-      <Button label="Take Order" onPress={handleTakeOrder} />
+      {!locationStarted ? <Button label="Take Order" onPress={handleTakeOrder} /> : <Button label="delivery Complete" onPress={stopLocation} />}
       </View>
       {isListVisible && (
         <ProductList />
       )}
         </>
-        :
-        <View style={styles.noOrderContainer}>
-          <Text style={styles.noOrderTitle}>No Orders to show</Text>
-        </View>
-      }
+    
+       
     </View>
   );
 }
@@ -99,7 +126,7 @@ const styles = StyleSheet.create({
   },
   orderTitleContainer: {
     flexDirection: 'row',
-    width: '80%',
+    width: '60%',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: 20

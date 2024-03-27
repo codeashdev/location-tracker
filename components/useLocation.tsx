@@ -63,6 +63,7 @@ function useLocation() {
       setLocationStarted(hasStarted);
     } catch (e) {
       Toast.show("error");
+      console.log(e)
     }
   };
 

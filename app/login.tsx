@@ -7,41 +7,35 @@ import { userRoleData } from '@/storage/asyncstorage';
 import { router } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/constants/Colors';
-// import socket from '@/utils/socket';
+import socket from '@/utils/socket';
+import { Socket } from 'socket.io-client';
 
 const LoginPage = () => {
   const [selectedRole, setSelectedRole] = useState<string>('user');
   const colorScheme = useColorScheme();
-  // const [socket, setSocket] = useState<Socket | null>(null); 
-  // console.log(io)
 
-  // React.useEffect(() => {
-  //   // const socket = io('http://localhost:8080');
-  //   // setSocket(socket); 
-  //   // Handle receiving data from the server
-  //   socket.on('receive_data', (data) => {
-  //     console.log('Received data from server:', data);
-  //     // Handle received data here
-  //   });
-
-    
-  //   return () => {
-  //     // Clean up event listeners when component unmounts
-  //     socket.off('receive_data');
-  //   };
-  // }, []);
-
+  React.useEffect(() => {
+    // Event listener for connection
+    const handleConnect = () => {
+      console.log('Connected to server');
+    };
   
+    // Add event listeners
+    socket.on('connect', handleConnect);
+    // Cleanup function
+    return () => {
+      // Remove event listeners
+      socket.off('connect', handleConnect);
+    };
+  }, []);
 
   // const engine = socket.io.engine;
   // console.log(socket.connected)
 
   const handleLogin = () => {
     userRoleData(selectedRole)
-    // console.log('Selected Role:', selectedRole);
-    // console.log('storage Role:',userRole)
      // Emit the selected role to the server
-    //  socket.emit('set_role', selectedRole);
+     socket.emit('set_role', selectedRole);
 
     switch (selectedRole) {
         case 'user':

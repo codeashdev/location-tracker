@@ -9,3 +9,13 @@ export type locationData = {
     latitude: number;
     longitude: number;
 }
+
+export type CarrierLocationDataType = {
+    carrierAddress: string;
+    mapRegion: {
+        latitude: number;
+        latitudeDelta: number;
+        longitude: number;
+        longitudeDelta: number;
+    };
+};
