@@ -49,12 +49,6 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-const handleHeaderPress = () => {
-  <TouchableOpacity>
-    
-  </TouchableOpacity>
-}
-
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 

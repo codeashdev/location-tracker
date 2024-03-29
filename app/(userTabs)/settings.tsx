@@ -1,9 +1,8 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { Text, View } from '@/components/Themed';
 import React from 'react';
-import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -20,18 +19,6 @@ export default function TabUserSettingsScreen() {
         >
         <Text style={styles.title}> <AntDesign size={28} style={{ marginRight: 0 }} name="setting" color="white" />Settings</Text>
         <View style={[styles.card, { backgroundColor: Colors[colorScheme ?? 'dark'].background }]}>
-          <TouchableOpacity style={styles.itemsContainer}>
-            <View style={styles.item}>
-              <View style={styles.itemTextIcon}>
-              <View style={styles.iconContainer}>
-              <FontAwesome size={18} style={{ marginRight: 0 }} name='map-marker' color="white" />
-              </View>
-              <Text  style={[styles.itemsText, { color: Colors[colorScheme ?? 'dark'].text }]}>Last Known Location</Text>
-              </View>
-              <AntDesign size={15} style={{ marginLeft: 5, color: Colors[colorScheme ?? 'dark'].text }} name="right" color="black" />
-            </View>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-          </TouchableOpacity>
         </View>
       </LinearGradient>
     </>

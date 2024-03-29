@@ -22,7 +22,7 @@ const handleLastLocationPress = () => {
 }
 const handleCurrentLocationPress = () => {
   if(locationOn) {
-    router.push('/UserLocation')
+    router.push('/CarrierLocation')
   } else {
     Toast.show("No Order yet")
   }

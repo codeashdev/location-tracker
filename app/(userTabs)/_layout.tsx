@@ -5,7 +5,7 @@ import { Tabs, router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-import { getuserRoleData } from '@/storage/asyncstorage';
+import socket from '@/utils/socket';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -14,19 +14,26 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-export default function TabLayout() {
+export default function UserTabLayout() {
   const colorScheme = useColorScheme();
   const [userRole, setUserRole] = React.useState<string>();
 
   React.useEffect(() => {
-    // Call getuserRoleData when the component mounts
-        const fetchData = async () => {
-          const role = await getuserRoleData();
-          setUserRole(role);
-        };
-    
-        fetchData(); 
-      }, []);
+    // Event listener to receive user role from the server
+    const handleUserRole = (role: string) => {
+      setUserRole(role);
+      console.log("Received user role:", role); // Log the received role
+    };
+  
+    socket.on('user_role', handleUserRole);
+  
+    console.log("Socket connected:", socket.connected); // Log socket connection status
+  
+    // Clean up function
+    return () => {
+      socket.off('user_role', handleUserRole);
+    };
+  }, [socket]);
 
       React.useEffect(() => {
         // if (userRole){

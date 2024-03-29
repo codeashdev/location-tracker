@@ -1,13 +1,13 @@
 const app = require('express')();
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const { Server } = require('socket.io');
 
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: 'http://localhost:8081',
-//     methods: ['GET', 'POST'],
-//   },
-// });
+const io = new Server(http, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+});
 
 // const { networkInterfaces } = require('os');
 
@@ -42,36 +42,55 @@ io.on('connection', (socket) => {
   // Handle role assignment
   socket.on('set_role', (role) => {
       socket.role = role;
-      console.log(`User ${socket.id} set role as ${role}`);
+      console.log(`Server: User ${socket.id} set role as ${role}`);
+// Emit the assigned role back to the client
+      socket.emit('user_role', role);
   });
 
   // Handle disconnection
   socket.on('disconnect', () => {
-      console.log(`User disconnected ${socket.id}`);
+      console.log(`Server: User disconnected ${socket.id}`);
   });
 
-  // Handle data transmission
   socket.on('send_data', (data) => {
-      switch (socket.role) {
-          case ROLES.USER:
-              io.to(ROLES.ADMIN).emit('receive_data', data);
-              break;
-          case ROLES.ADMIN:
-              io.to(ROLES.CARRIER).emit('receive_data', data);
-              break;
-          case ROLES.CARRIER:
-              io.to(ROLES.USER).emit('receive_data', data);
-              io.to(ROLES.ADMIN).emit('receive_data', data); // Optional: Send data to admin as well
-              break;
-          default:
-              console.log(`Unknown role: ${socket.role}`);
-              // Handle the case where the role is not defined or invalid
-              // You can emit an error message to the client
-              // socket.emit('error', 'Invalid role');
-              break;
-      }
-  });
+    try {
+      // console.log('Sending data to USER and ADMIN:', data);
+      socket.broadcast.emit('receive_data', data);
+        // switch (socket.role) {
+        //     case ROLES.USER:
+        //         console.log('Sending data to ADMIN:', data);
+        //         socket.broadcast.to(ROLES.ADMIN).emit('receive_data', data);
+        //         // io.to(ROLES.ADMIN).broadcast.emit('receive_data', data);
+        //         break;
+        //     case ROLES.ADMIN:
+        //         console.log('Sending data to CARRIER:', data);
+        //         socket.broadcast.to(ROLES.CARRIER).emit('receive_data', data);
+        //         // io.to(ROLES.CARRIER).broadcast.emit('receive_data', data);
+        //         break;
+        //     case ROLES.CARRIER:
+        //         console.log('Sending data to USER and ADMIN:', data);
+        //         socket.broadcast.to(ROLES.USER).emit('receive_data', data);
+        //         socket.broadcast.to(ROLES.ADMIN).emit('receive_data', data);
+        //         // io.to(ROLES.USER).broadcast.emit('receive_data', data);
+        //         // io.to(ROLES.ADMIN).broadcast.emit('receive_data', data); // Optional: Send data to admin as well
+        //         break;
+        //     default:
+        //         console.log(`Unknown role: ${socket.role}`);
+        //         // Handle the case where the role is not defined or invalid
+        //         // You can emit an error message to the client
+        //         // socket.emit('error', 'Invalid role');
+        //         break;
+        // }
+    } catch (error) {
+        console.error('Error sending data:', error.message);
+        // Handle the error appropriately, such as emitting an error message to the client
+        // socket.emit('error', error.message);
+    }
 });
+
+});
+  // Handle data transmission
+ 
 
 
 app.get('/', (req, res) => {

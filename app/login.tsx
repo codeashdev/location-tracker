@@ -8,7 +8,6 @@ import { router } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/constants/Colors';
 import socket from '@/utils/socket';
-import { Socket } from 'socket.io-client';
 
 const LoginPage = () => {
   const [selectedRole, setSelectedRole] = useState<string>('user');
@@ -67,9 +66,6 @@ const LoginPage = () => {
         <Picker.Item label="Admin" value="admin" />
       </Picker>
       <Button label="Login" onPress={handleLogin} ></Button>
-      {/* <View style={{ marginTop:50,  justifyContent: 'center', alignItems: 'center' }}>
-      <Button label="Clear Storage" onPress={clearAllAsyncStorage} ></Button>
-      </View> */}
     </View>
   );
 };

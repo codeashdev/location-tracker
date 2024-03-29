@@ -1,42 +1,34 @@
-import useLocation from '@/components/useLocation';
 import customMapStyle from '@/utils/customMapStyle';
 import { FontAwesome } from '@expo/vector-icons';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, useColorScheme } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { View, Text } from '@/components/Themed';
-import useLocationStatus from '@/components/useLocationStatus';
+import useReceiveLocation from '@/components/useReceiveLocation';
 
 const LastLocation = () => {
-  const { lastLocation, lastAddress, getLastKnownLocation } = useLocation();
-  const locationOn = useLocationStatus();
+  const carrierLocation = useReceiveLocation()
   const colorScheme = useColorScheme();
-  
-
-  useEffect(() => {
-    getLastKnownLocation();
-  }, []);
-
-  // console.log(loactionOn)
+  // console.log(carrierLocation)
 
   return (
     <View style={styles.container}>
-      {locationOn ?
+      {carrierLocation?.lastLocation ?
       <>
-      {lastLocation.latitude > 0 && lastLocation.longitude > 0 ?  (
+      {carrierLocation.lastLocation.latitude > 0 && carrierLocation.lastLocation.longitude > 0 ?  (
           <MapView
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         customMapStyle={colorScheme === 'dark' ? customMapStyle : []}
                         region={{
-                            latitude: lastLocation.latitude,
-                            longitude: lastLocation.longitude,
+                            latitude: carrierLocation.lastLocation.latitude,
+                            longitude: carrierLocation.lastLocation.longitude,
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421,
                         }}
                         
                     >   
-                        <Marker coordinate={{ ...lastLocation }} title="Carrier" />
+                        <Marker coordinate={{ ...carrierLocation.lastLocation }} title="Carrier" />
                     </MapView>
       ) : (
         <Text style={styles.text}>Fetching last known location...</Text>
@@ -44,7 +36,7 @@ const LastLocation = () => {
                     <View style={styles.addressContainer}>
                         <FontAwesome name="map-pin" size={24} color="#1EB58A" style={{marginRight: 2}} />
                         <View>
-                            <Text>{lastAddress?.formattedAddress}</Text>
+                            <Text>{carrierLocation.carrierLastAdress}</Text>
                         </View>
                     </View>
                     </>

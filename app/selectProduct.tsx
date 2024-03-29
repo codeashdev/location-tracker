@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Card, Button } from 'react-native-paper'; // Import Card and Button from react-native-paper
+import { Card, Button } from 'react-native-paper';
 
 import { View, Text } from '@/components/Themed';
 import { storeProducts } from '@/storage/asyncstorage';

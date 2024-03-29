@@ -2,74 +2,22 @@ import React from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 import { Link, router } from 'expo-router';
-import { getCustomerOrdered } from '@/storage/asyncstorage';
 import { FontAwesome } from '@expo/vector-icons';
 import { View, Text } from '@/components/Themed';
 import useLocationStatus from '@/components/useLocationStatus';
-import socket from '@/utils/socket';
-import { CarrierLocationDataType } from '@/utils/types.ds';
 
 export default function TabUserScreen() {
- 
-  const [userOrdered, setUserOrdered] = React.useState<boolean>(false);
   const locationOn = useLocationStatus();
-  const [carrierLocation, setCarrierLocation] = React.useState<CarrierLocationDataType>();
-  const [role, setRole] = React.useState('');
-
-  React.useEffect(() => {
-    const fetchUserOrdered = async () => {
-      const ordered = await getCustomerOrdered();
-      setUserOrdered(ordered);
-    };
-
-    fetchUserOrdered();
-  }, []);
-
   
-  React.useEffect(() => {
-   
-    // Event listener for receiving data
-    const handleReceiveData = (data: CarrierLocationDataType) => {
-      // console.log('Received data from server:', data);
-      setCarrierLocation(data)
-      
-      // Handle received data here
-    };
-    // Add event listeners
-    socket.on('receive_data', handleReceiveData);
-    // Cleanup function
-    return () => {
-      // Remove event listeners
-      socket.off('receive_data', handleReceiveData);
-    };
-  }, []);
-
-
-  React.useEffect(() => {
-    // Listen for the 'set_role' event from the server
-    socket.on('set_role', (role) => {
-      setRole(role);
-      console.log(role)
-    });
-
-    // Cleanup function
-    return () => {
-      // Remove the event listener when the component unmounts
-      socket.off('set_role');
-    };
-  }, []); // Empty dependency array to ensure the effect runs only once
-
-
 
   const handleLocationPress = () => {
-    router.push('/UserLocation');
+    router.push('/CarrierLocation');
   }
+
   const handleOrderPress = () => {
     router.push('/selectProduct');
   }
   
-
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
      
@@ -78,7 +26,6 @@ export default function TabUserScreen() {
          <Text style={styles.linkText}>Order</Text>
        </TouchableOpacity>
 
-       {/* <Text style={styles.aprrovalText}>{userOrdered && locationOn  && 'Status: Order Approved'}{userOrdered && !locationOn  && 'Status: Waiting for approval'}</Text> */}
       {locationOn ?
       <>      
        <TouchableOpacity style={styles.orderContainer} onPress={handleLocationPress}>

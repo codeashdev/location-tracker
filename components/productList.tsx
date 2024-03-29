@@ -1,30 +1,33 @@
 import { StyleSheet } from 'react-native';
-import { View, Text } from '@/components/Themed';
+import { List } from 'react-native-paper';
+
 import React from 'react';
-import { CellContainer, FlashList } from "@shopify/flash-list";
 import { useStoredProducts } from './useGetProducts';
 
 
 export function ProductList() {
   const { products } = useStoredProducts();
+  const [accordionExpanded, setAccordionExpanded] = React.useState(false);
   
-  // console.log(products)
-    const renderItem = ({ item, index }: { item: string; index: number }) => (
-        <CellContainer style={styles.cellContainer} index={index}>
-          <Text>{item}</Text> 
-          
-        </CellContainer>
-      );
-      
 
+      const handleAccordionPress = () => setAccordionExpanded(!accordionExpanded);
     return (
-        <View style={styles.listContainer}>
-        <FlashList
-          data={products}
-          renderItem={renderItem}
-          estimatedItemSize={140}
-        />
-      </View>
+    
+      <List.Section title='New Order'>
+      <List.Accordion
+        title="Order"
+        rippleColor='#1EB58A'
+        left={props => <List.Icon {...props} icon="shopping" color='#1EB58A' />}
+        expanded={accordionExpanded}
+        onPress={handleAccordionPress}>
+          {products.map((product, index) => (
+              <List.Item key={index} title={product} />
+          ))}
+       
+      </List.Accordion>
+    </List.Section>
+
+      
     )
 }
 
