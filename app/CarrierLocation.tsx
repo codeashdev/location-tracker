@@ -32,6 +32,7 @@ function CarrierLocation() {
         }
       }, [carrierLocation?.locationData]);
 
+      // console.log(carrierLocation?.locationData)
     return (
         <View style={styles.container}>
             {carrierLocation ? (

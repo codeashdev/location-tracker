@@ -4,9 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { getCustomerOrdered, sendProductsToCarrier } from '@/storage/asyncstorage';
 import Button from '@/components/Button';
 import { ProductList } from '@/components/productList';
+import socket from '@/utils/socket';
 
 export default function TabAdmincreen() {
   const [customerOrdered, setCustomerOrdered] = useState<boolean>(false);
+  const [userOrder, setUserOrder] = useState<string[]>();
 
   useEffect(() => {
     
@@ -21,6 +23,20 @@ export default function TabAdmincreen() {
   const handleSendToCarrier = async () => {
     sendProductsToCarrier()
   };
+
+//   useEffect(() => {
+//     const handleReceiveData = (data: string[]) => {
+//         setUserOrder(data);
+//         // console.log("recieved data from user:" + data)
+//     };
+//     socket.on('receive_data', handleReceiveData);
+
+//     return () => {
+//         socket.off('receive_data', handleReceiveData);
+//     };
+// }, [socket]); 
+
+// console.log(userOrder)
 
   return (
     <View style={styles.container}>

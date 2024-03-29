@@ -42,7 +42,7 @@ const LastLocation = () => {
                     </>
                     :
                     <View style={styles.noOrderContainer}>
-                            <Text style={styles.noOrderTitle}>No Order yet</Text>
+                            <Text style={styles.noOrderTitle}>Carrier hasn't taken the order yet</Text>
                         </View>
                     }
     </View>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   noOrderTitle: {
     fontFamily: "Inter",
-    fontSize: 20,
+    fontSize: 18,
     color: '#1EB58A'
   },
   map: {

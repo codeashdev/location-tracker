@@ -9,6 +9,7 @@ import socket from '@/utils/socket';
 
 export default function TabHomeScreen() {
   const [productsSent, setProductsSent] = useState<boolean>(false);
+  const [startLocation, setStartLocation] = useState(false);
   const { userAddress, locationStarted, locationData, mapRegion, stopLocation, startLocationTracking, getLastKnownLocation, lastLocation, lastAddress } = useLocation();
   let carrierAddress = userAddress?.formattedAddress;
   let carrierLastAdress= lastAddress?.formattedAddress
@@ -19,7 +20,7 @@ export default function TabHomeScreen() {
     lastLocation,
     carrierLastAdress,
   }
-  const [buttonPressed, setButtonPressed] = useState(false);
+  
   useEffect(() => {
     
     const fetchProductsSentToCarrier = async () => {
@@ -31,7 +32,7 @@ export default function TabHomeScreen() {
   }, []);
 
   useEffect(() => {
-    if (buttonPressed) {
+    if (startLocation) {
         const emitData = () => {
             startLocationTracking();
             // console.log(carrierLocationData)
@@ -39,21 +40,23 @@ export default function TabHomeScreen() {
         };
         emitData();
     }
-}, [buttonPressed, carrierLocationData, socket]); 
+}, [startLocation, carrierLocationData, socket]); 
 
 
 
   const handleTakeOrder = () => {
-    setButtonPressed(true);
+    setStartLocation(true);
     sendLocationToUser();
     getLastKnownLocation();
     // console.log(carrierLocationData)
   }
 
   const handleStop = () => {
-    setButtonPressed(false);
+    setStartLocation(false);
     stopLocation();
   }
+
+  // console.log(locationData)
    
   return (
     <View style={styles.container}>

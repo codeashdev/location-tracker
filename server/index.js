@@ -36,15 +36,19 @@ const ROLES = {
   ADMIN: 'admin',
 };
 
+const roleToIdMap = {};
+
 io.on('connection', (socket) => {
   console.log(`User connected ${socket.id}`);
 
   // Handle role assignment
   socket.on('set_role', (role) => {
-      socket.role = role;
-      console.log(`Server: User ${socket.id} set role as ${role}`);
+    const id = socket.id
+    roleToIdMap[role] = id;
+      const userRole = socket.role = {id, role};
+      console.log(`Server: User ${id} set role as ${role}`);
 // Emit the assigned role back to the client
-      socket.emit('user_role', role);
+      socket.emit('user_role', userRole);
   });
 
   // Handle disconnection
@@ -53,38 +57,40 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send_data', (data) => {
+    const userRole = socket.role;
     try {
-      // console.log('Sending data to USER and ADMIN:', data);
-      socket.broadcast.emit('receive_data', data);
-        // switch (socket.role) {
-        //     case ROLES.USER:
-        //         console.log('Sending data to ADMIN:', data);
-        //         socket.broadcast.to(ROLES.ADMIN).emit('receive_data', data);
-        //         // io.to(ROLES.ADMIN).broadcast.emit('receive_data', data);
-        //         break;
-        //     case ROLES.ADMIN:
-        //         console.log('Sending data to CARRIER:', data);
-        //         socket.broadcast.to(ROLES.CARRIER).emit('receive_data', data);
-        //         // io.to(ROLES.CARRIER).broadcast.emit('receive_data', data);
-        //         break;
-        //     case ROLES.CARRIER:
-        //         console.log('Sending data to USER and ADMIN:', data);
-        //         socket.broadcast.to(ROLES.USER).emit('receive_data', data);
-        //         socket.broadcast.to(ROLES.ADMIN).emit('receive_data', data);
-        //         // io.to(ROLES.USER).broadcast.emit('receive_data', data);
-        //         // io.to(ROLES.ADMIN).broadcast.emit('receive_data', data); // Optional: Send data to admin as well
-        //         break;
-        //     default:
-        //         console.log(`Unknown role: ${socket.role}`);
-        //         // Handle the case where the role is not defined or invalid
-        //         // You can emit an error message to the client
-        //         // socket.emit('error', 'Invalid role');
-        //         break;
-        // }
+        switch (userRole.role) {
+            case ROLES.USER:
+                // console.log('Sending data to ADMIN:', data);
+                const adminId = roleToIdMap[ROLES.ADMIN];
+                if (adminId) {
+                    socket.broadcast.to(adminId).emit('receive_data', data);
+                }
+                break;
+            case ROLES.ADMIN:
+                // console.log('Sending data to CARRIER:', data);
+                const carrierId = roleToIdMap[ROLES.CARRIER];
+                if (carrierId) {
+                    socket.broadcast.to(carrierId).emit('receive_data', data);
+                }
+                break;
+            case ROLES.CARRIER:
+                // console.log('Sending data to USER and ADMIN:', data);
+                const userId = roleToIdMap[ROLES.USER];
+                if (userId) {
+                    socket.broadcast.to(userId).emit('receive_data', data);
+                }
+                const adminIdForCarrier = roleToIdMap[ROLES.ADMIN];
+                if (adminIdForCarrier) {
+                    socket.broadcast.to(adminIdForCarrier).emit('receive_data', data);
+                }
+                break;
+            default:
+                console.log(`Unknown role: ${socket.role}`);
+                break;
+        }
     } catch (error) {
         console.error('Error sending data:', error.message);
-        // Handle the error appropriately, such as emitting an error message to the client
-        // socket.emit('error', error.message);
     }
 });
 

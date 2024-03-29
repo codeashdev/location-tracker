@@ -1,3 +1,4 @@
+import React from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -7,9 +8,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import React from 'react';
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native';
 import { clearAllAsyncStorage } from '@/storage/asyncstorage';
 import { PaperProvider } from 'react-native-paper';
 
@@ -19,7 +19,7 @@ export {
 } from 'expo-router';
 
 export const unstable_settings = {
-  initialRouteName: 'login',
+  initialRouteName: 'index',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -58,7 +58,7 @@ function RootLayoutNav() {
     <SafeAreaProvider>
     <PaperProvider>
       <Stack screenOptions={{animation: 'ios'}}>
-        <Stack.Screen name="login" options={{ headerShown: true, headerTitle: '', headerRight: () =>  <FontAwesome onPress={clearAllAsyncStorage} name="trash" size={28} color="red" /> }} />
+        <Stack.Screen name="index" options={{ headerShown: true, headerTitle: '', headerRight: () =>  <FontAwesome onPress={clearAllAsyncStorage} name="trash" size={28} color="red" /> }} />
         <Stack.Screen name="(adminTabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(carrierTabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(userTabs)" options={{ headerShown: false }} />

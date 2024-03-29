@@ -21,11 +21,7 @@ const handleLastLocationPress = () => {
   router.push('/lastLocation')
 }
 const handleCurrentLocationPress = () => {
-  if(locationOn) {
     router.push('/CarrierLocation')
-  } else {
-    Toast.show("No Order yet")
-  }
   
 }
 // console.log(locationOn)

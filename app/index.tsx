@@ -9,8 +9,9 @@ import { useColorScheme } from 'react-native';
 import Colors from '@/constants/Colors';
 import socket from '@/utils/socket';
 
-const LoginPage = () => {
-  const [selectedRole, setSelectedRole] = useState<string>('user');
+
+const Index = () => {
+	const [selectedRole, setSelectedRole] = useState<string>('user');
   const colorScheme = useColorScheme();
 
   React.useEffect(() => {
@@ -32,7 +33,7 @@ const LoginPage = () => {
   // console.log(socket.connected)
 
   const handleLogin = () => {
-    userRoleData(selectedRole)
+    // userRoleData(selectedRole)
      // Emit the selected role to the server
      socket.emit('set_role', selectedRole);
 
@@ -70,4 +71,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Index;

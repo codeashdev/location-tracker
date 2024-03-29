@@ -6,6 +6,7 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import socket from '@/utils/socket';
+import { userRoleType } from '@/utils/types.ds';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -16,21 +17,11 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const [userRole, setUserRole] = React.useState<string>();
+  const [userRole, setUserRole] = React.useState<userRoleType>();
   
-      React.useEffect(() => {
-        // if (userRole){
-        //   console.log(userRole)
-        // }
-          if (userRole && userRole !== 'carrier') {
-            router.push('../login');
-          }
-        },[userRole]);
-
-
         React.useEffect(() => {
           // Event listener to receive user role from the server
-          const handleUserRole = (role: string) => {
+          const handleUserRole = (role: userRoleType) => {
             setUserRole(role);
             console.log("Received user role:", role); // Log the received role
           };
@@ -44,6 +35,13 @@ export default function TabLayout() {
             socket.off('user_role', handleUserRole);
           };
         }, [socket]);
+
+
+        React.useEffect(() => {
+          if (userRole && userRole.role !== 'carrier') {
+            router.dismissAll();
+          }
+        },[userRole]);
         
        
   const screenOptions = {

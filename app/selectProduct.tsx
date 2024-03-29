@@ -6,6 +6,7 @@ import { View, Text } from '@/components/Themed';
 import { storeProducts } from '@/storage/asyncstorage';
 import { productsData } from '@/utils/productData';
 import { router } from 'expo-router';
+import socket from '@/utils/socket';
 
 
 export default function SelectProductScreen() {
@@ -25,8 +26,11 @@ export default function SelectProductScreen() {
 
   const handleOrder = () => {
     storeProducts(selectedProducts)
+    socket.emit('send_data', selectedProducts);
     router.dismiss()
   }
+
+  // console.log(selectedProducts)
 
   return (
     <View style={styles.container}>

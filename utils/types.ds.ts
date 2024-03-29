@@ -30,3 +30,8 @@ export type CarrierLocationDataType = {
 
 
 };
+
+export type userRoleType = {
+    id: string;
+    role: string;
+  }

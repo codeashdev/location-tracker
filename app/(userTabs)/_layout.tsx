@@ -6,6 +6,7 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import socket from '@/utils/socket';
+import { userRoleType } from '@/utils/types.ds';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -16,11 +17,11 @@ function TabBarIcon(props: {
 
 export default function UserTabLayout() {
   const colorScheme = useColorScheme();
-  const [userRole, setUserRole] = React.useState<string>();
+  const [userRole, setUserRole] = React.useState<userRoleType>();
 
   React.useEffect(() => {
     // Event listener to receive user role from the server
-    const handleUserRole = (role: string) => {
+    const handleUserRole = (role: userRoleType) => {
       setUserRole(role);
       console.log("Received user role:", role); // Log the received role
     };
@@ -36,11 +37,8 @@ export default function UserTabLayout() {
   }, [socket]);
 
       React.useEffect(() => {
-        // if (userRole){
-        //   console.log(userRole)
-        // }
-          if (userRole && userRole !== 'user') {
-            router.push('../login');
+          if (userRole && userRole.role !== 'user') {
+            router.dismissAll();
           }
         },[userRole]);
         
